@@ -15,6 +15,9 @@
 		<module>lemurMall-order</module>
 		<module>lemurMall-product</module>
 		<module>lemurMall-ware</module>
+		<module>renren-fast</module>
+		<module>renren-generator</module>
+		<module>lemurMall-gateway</module>
 	</modules>
 
 
