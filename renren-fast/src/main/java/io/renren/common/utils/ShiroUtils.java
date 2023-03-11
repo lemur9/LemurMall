@@ -8,7 +8,7 @@
 
 package io.renren.common.utils;
 
-import io.renren.common.exception.RRException;
+import org.lemur.common.exception.LemurMallException;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -52,7 +52,7 @@ public class ShiroUtils {
 	public static String getKaptcha(String key) {
 		Object kaptcha = getSessionAttribute(key);
 		if(kaptcha == null){
-			throw new RRException("验证码已失效");
+			throw new LemurMallException("验证码已失效");
 		}
 		getSession().removeAttribute(key);
 		return kaptcha.toString();

@@ -1,16 +1,16 @@
 package org.lemur.lemurmall.product.service.impl;
 
-import org.lemur.common.utils.PageUtils;
-import org.lemur.common.utils.Query;
-import org.springframework.stereotype.Service;
-import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
+import org.lemur.common.utils.PageUtils;
+import org.lemur.common.utils.Query;
 import org.lemur.lemurmall.product.dao.AttrAttrgroupRelationDao;
 import org.lemur.lemurmall.product.entity.AttrAttrgroupRelationEntity;
 import org.lemur.lemurmall.product.service.AttrAttrgroupRelationService;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 
 @Service("attrAttrgroupRelationService")

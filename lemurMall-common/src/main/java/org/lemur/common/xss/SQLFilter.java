@@ -8,8 +8,8 @@
 
 package org.lemur.common.xss;
 
+import org.lemur.common.exception.LemurMallException;
 import org.apache.commons.lang.StringUtils;
-import org.lemur.common.utils.RRException;
 
 /**
  * SQL过滤
@@ -41,7 +41,7 @@ public class SQLFilter {
         //判断是否包含非法字符
         for(String keyword : keywords){
             if(str.indexOf(keyword) != -1){
-                throw new RRException("包含非法字符");
+                throw new LemurMallException("包含非法字符");
             }
         }
 

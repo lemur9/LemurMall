@@ -6,14 +6,12 @@
  * 版权所有，侵权必究！
  */
 
-package io.renren.common.validator.group;
+package org.lemur.common.utils.group;
 
 /**
- * 更新数据 Group
+ * 腾讯云
  *
  * @author Mark sunlightcs@gmail.com
  */
-
-public interface UpdateGroup {
-
+public interface QcloudGroup {
 }

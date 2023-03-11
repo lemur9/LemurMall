@@ -12,7 +12,7 @@ package io.renren.modules.sys.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.code.kaptcha.Producer;
-import io.renren.common.exception.RRException;
+import org.lemur.common.exception.LemurMallException;
 import io.renren.common.utils.DateUtils;
 import io.renren.modules.sys.dao.SysCaptchaDao;
 import io.renren.modules.sys.entity.SysCaptchaEntity;
@@ -37,7 +37,7 @@ public class SysCaptchaServiceImpl extends ServiceImpl<SysCaptchaDao, SysCaptcha
     @Override
     public BufferedImage getCaptcha(String uuid) {
         if(StringUtils.isBlank(uuid)){
-            throw new RRException("uuid不能为空");
+            throw new LemurMallException("uuid不能为空");
         }
         //生成文字验证码
         String code = producer.createText();

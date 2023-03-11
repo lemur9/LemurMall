@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package io.renren.common.validator.group;
+package org.lemur.common.utils.group;
 
 import javax.validation.GroupSequence;
 

@@ -12,9 +12,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.gson.Gson;
-import io.renren.common.exception.RRException;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.Query;
+import org.lemur.common.exception.LemurMallException;
+import org.lemur.common.utils.PageUtils;
+import org.lemur.common.utils.Query;
 import io.renren.modules.sys.dao.SysConfigDao;
 import io.renren.modules.sys.entity.SysConfigEntity;
 import io.renren.modules.sys.redis.SysConfigRedis;
@@ -98,7 +98,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfigEnt
 		try {
 			return clazz.newInstance();
 		} catch (Exception e) {
-			throw new RRException("获取参数失败");
+			throw new LemurMallException("获取参数失败");
 		}
 	}
 }

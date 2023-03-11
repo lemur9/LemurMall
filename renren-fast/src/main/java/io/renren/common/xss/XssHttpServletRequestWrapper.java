@@ -10,6 +10,7 @@ package io.renren.common.xss;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.lemur.common.xss.HTMLFilter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 

@@ -10,7 +10,7 @@ package io.renren.modules.app.interceptor;
 
 
 import io.jsonwebtoken.Claims;
-import io.renren.common.exception.RRException;
+import org.lemur.common.exception.LemurMallException;
 import io.renren.modules.app.utils.JwtUtils;
 import io.renren.modules.app.annotation.Login;
 import org.apache.commons.lang.StringUtils;
@@ -56,12 +56,12 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
         //凭证为空
         if(StringUtils.isBlank(token)){
-            throw new RRException(jwtUtils.getHeader() + "不能为空", HttpStatus.UNAUTHORIZED.value());
+            throw new LemurMallException(jwtUtils.getHeader() + "不能为空", HttpStatus.UNAUTHORIZED.value());
         }
 
         Claims claims = jwtUtils.getClaimByToken(token);
         if(claims == null || jwtUtils.isTokenExpired(claims.getExpiration())){
-            throw new RRException(jwtUtils.getHeader() + "失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
+            throw new LemurMallException(jwtUtils.getHeader() + "失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
         }
 
         //设置userId到request里，后续根据userId，获取用户信息

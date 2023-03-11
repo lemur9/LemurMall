@@ -11,10 +11,10 @@ package io.renren.modules.sys.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.renren.common.exception.RRException;
-import io.renren.common.utils.Constant;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.Query;
+import org.lemur.common.exception.LemurMallException;
+import org.lemur.common.utils.Constant;
+import org.lemur.common.utils.PageUtils;
+import org.lemur.common.utils.Query;
 import io.renren.modules.sys.dao.SysUserDao;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysRoleService;
@@ -139,7 +139,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 
 		//判断是否越权
 		if(!roleIdList.containsAll(user.getRoleIdList())){
-			throw new RRException("新增用户所选角色，不是本人创建");
+			throw new LemurMallException("新增用户所选角色，不是本人创建");
 		}
 	}
 }

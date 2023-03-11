@@ -11,7 +11,7 @@ package io.renren.modules.app.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.renren.common.exception.RRException;
+import org.lemur.common.exception.LemurMallException;
 import io.renren.common.validator.Assert;
 import io.renren.modules.app.dao.UserDao;
 import io.renren.modules.app.entity.UserEntity;
@@ -36,7 +36,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 
 		//密码错误
 		if(!user.getPassword().equals(DigestUtils.sha256Hex(form.getPassword()))){
-			throw new RRException("手机号或密码错误");
+			throw new LemurMallException("手机号或密码错误");
 		}
 
 		return user.getUserId();

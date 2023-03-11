@@ -11,7 +11,7 @@ package io.renren.modules.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.renren.common.utils.Constant;
+import org.lemur.common.utils.Constant;
 import io.renren.common.utils.MapUtils;
 import io.renren.modules.sys.dao.SysMenuDao;
 import io.renren.modules.sys.entity.SysMenuEntity;

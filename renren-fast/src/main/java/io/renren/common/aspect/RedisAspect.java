@@ -8,7 +8,7 @@
 
 package io.renren.common.aspect;
 
-import io.renren.common.exception.RRException;
+import org.lemur.common.exception.LemurMallException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -38,7 +38,7 @@ public class RedisAspect {
                 result = point.proceed();
             }catch (Exception e){
                 logger.error("redis error", e);
-                throw new RRException("Redis服务异常");
+                throw new LemurMallException("Redis服务异常");
             }
         }
         return result;
