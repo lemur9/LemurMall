@@ -1,5 +1,6 @@
 package org.lemur.lemurmall.product.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.R;
 import org.lemur.lemurmall.product.entity.CategoryBrandRelationEntity;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -26,11 +28,22 @@ public class CategoryBrandRelationController {
     private CategoryBrandRelationService categoryBrandRelationService;
 
     /**
+     * 获取当前品牌关联的所有分类列表
+     */
+    @GetMapping("/catelog/list")
+    //@RequiresPermissions("product:categorybrandrelation:list")
+    public R catelogList(@RequestParam("brandId") Long brandId) {
+        List<CategoryBrandRelationEntity> data = categoryBrandRelationService.list(new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_Id",brandId));
+
+        return R.ok().put("data", data);
+    }
+
+    /**
      * 列表
      */
     @RequestMapping("/list")
     //@RequiresPermissions("product:categorybrandrelation:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = categoryBrandRelationService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -54,7 +67,9 @@ public class CategoryBrandRelationController {
     @RequestMapping("/save")
     //@RequiresPermissions("product:categorybrandrelation:save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
+//		categoryBrandRelationService.save(categoryBrandRelation);
+
+        categoryBrandRelationService.saveDetail(categoryBrandRelation);
 
         return R.ok();
     }

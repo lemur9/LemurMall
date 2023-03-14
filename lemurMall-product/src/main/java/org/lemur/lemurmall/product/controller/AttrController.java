@@ -4,6 +4,7 @@ import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.R;
 import org.lemur.lemurmall.product.entity.AttrEntity;
 import org.lemur.lemurmall.product.service.AttrService;
+import org.lemur.lemurmall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,16 @@ import java.util.Map;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+
+    /**
+     * 列表
+     */
+    @GetMapping("base/list/{catelogId}")
+    public R baseAttrList(@RequestParam Map<String, Object> params,@PathVariable("catelogId") Long catelogId) {
+        PageUtils page = attrService.queryBaseAttrPage(params, catelogId);
+
+        return R.ok().put("page", page);
+    }
 
     /**
      * 列表
@@ -53,8 +64,8 @@ public class AttrController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:attr:save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    public R save(@RequestBody AttrVo attr){
+		attrService.saveAttr(attr);
 
         return R.ok();
     }

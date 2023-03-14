@@ -7,18 +7,21 @@ import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.Query;
 import org.lemur.lemurmall.product.dao.CategoryDao;
 import org.lemur.lemurmall.product.entity.CategoryEntity;
+import org.lemur.lemurmall.product.service.CategoryBrandRelationService;
 import org.lemur.lemurmall.product.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -50,6 +53,34 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         //TODO 1.检查当前删除的菜单，是否被其他地方引用
         baseMapper.deleteBatchIds(asList);
+    }
+
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        findParentPath(catelogId, paths);
+        Collections.reverse(paths);
+
+        return paths.toArray(new Long[0]);
+    }
+
+    @Override
+    public void updateDetail(CategoryEntity category) {
+        this.updateById(category);
+        if (StringUtils.hasLength(category.getName())) {
+            categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
+        }
+    }
+
+    private void findParentPath(Long catelogId, List<Long> paths) {
+        paths.add(catelogId);
+        CategoryEntity categoryEntity = this.getById(catelogId);
+        if(categoryEntity == null) {
+            return;
+        }
+        if (categoryEntity.getParentCid() != 0) {
+            findParentPath(categoryEntity.getParentCid(), paths);
+        }
     }
 
     /**

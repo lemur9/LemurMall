@@ -9,6 +9,7 @@ import org.lemur.lemurmall.product.dao.AttrGroupDao;
 import org.lemur.lemurmall.product.entity.AttrGroupEntity;
 import org.lemur.lemurmall.product.service.AttrGroupService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -17,13 +18,29 @@ import java.util.Map;
 public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEntity> implements AttrGroupService {
 
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        IPage<AttrGroupEntity> page = this.page(
-                new Query<AttrGroupEntity>().getPage(params),
-                new QueryWrapper<AttrGroupEntity>()
-        );
+    public PageUtils queryPage(Map<String, Object> params, Long catelogId) {
+        String key = (String) params.get("key");
+        QueryWrapper<AttrGroupEntity> wrapper = new QueryWrapper<>();
+        if (StringUtils.hasLength(key)) {
+            wrapper.and(obj -> {
+                obj.eq("attr_group_id",key).or().like("attr_group_name",key);
+            });
+        }
 
-        return new PageUtils(page);
+        if (catelogId == 0) {
+            IPage<AttrGroupEntity> page = this.page(
+                    new Query<AttrGroupEntity>().getPage(params),
+                    wrapper
+            );
+            return new PageUtils(page);
+        } else {
+            wrapper.eq("catelog_id", catelogId);
+            IPage<AttrGroupEntity> page = this.page(new Query<AttrGroupEntity>().getPage(params),
+                    wrapper);
+            return new PageUtils(page);
+        }
+
+
     }
 
 }
