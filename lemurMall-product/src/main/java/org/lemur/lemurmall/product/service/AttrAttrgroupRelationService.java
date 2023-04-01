@@ -3,6 +3,7 @@ package org.lemur.lemurmall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.lemur.common.utils.PageUtils;
 import org.lemur.lemurmall.product.entity.AttrAttrgroupRelationEntity;
+import org.lemur.lemurmall.product.vo.AttrGroupRelationVo;
 
 import java.util.Map;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface AttrAttrgroupRelationService extends IService<AttrAttrgroupRelationEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void deleteRelation(AttrGroupRelationVo[] vos);
 }
 

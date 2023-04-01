@@ -2,13 +2,18 @@ package org.lemur.lemurmall.product.controller;
 
 import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.R;
+import org.lemur.lemurmall.product.entity.AttrEntity;
 import org.lemur.lemurmall.product.entity.AttrGroupEntity;
+import org.lemur.lemurmall.product.service.AttrAttrgroupRelationService;
 import org.lemur.lemurmall.product.service.AttrGroupService;
+import org.lemur.lemurmall.product.service.AttrService;
 import org.lemur.lemurmall.product.service.CategoryService;
+import org.lemur.lemurmall.product.vo.AttrGroupRelationVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,13 +34,55 @@ public class AttrGroupController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private AttrService attrService;
+
+    @Autowired
+    private AttrAttrgroupRelationService attrAttrgroupRelationService;
+
+    /**
+     * 查看关联属性
+     *
+     * @param attrgroupId
+     * @return
+     */
+    @GetMapping("/{attrgroupId}/attr/relation")
+    public R attrRelation(@PathVariable("attrgroupId") Long attrgroupId) {
+        List<AttrEntity> entities = attrService.getRelationAttr(attrgroupId);
+        return R.ok().put("data", entities);
+    }
+
+    /**
+     * 查看未关联的属性
+     *
+     * @param attrgroupId
+     * @return
+     */
+    @GetMapping("/{attrgroupId}/noattr/relation")
+    public R attrNoRelation(@PathVariable("attrgroupId") Long attrgroupId,
+                            @RequestParam Map<String, Object> params) {
+
+        PageUtils page = attrService.getNoRelationAttr(params, attrgroupId);
+        return R.ok().put("page", page);
+    }
+
+    /**
+     * 删除关联关系
+     */
+    @PostMapping("/attr/relation/delete")
+    public R deleteRelation(@RequestBody AttrGroupRelationVo[] vos) {
+        attrAttrgroupRelationService.deleteRelation(vos);
+        return R.ok();
+    }
+
+
     /**
      * 列表
      */
     @RequestMapping("/list/{catelogId}")
     //@RequiresPermissions("product:attrgroup:list")
     public R list(@RequestParam Map<String, Object> params, @PathVariable("catelogId") Long catelogId) {
-        PageUtils page = attrGroupService.queryPage(params,catelogId);
+        PageUtils page = attrGroupService.queryPage(params, catelogId);
         return R.ok().put("page", page);
     }
 

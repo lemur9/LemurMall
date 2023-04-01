@@ -19,6 +19,10 @@ public class AttrVo {
      */
     private Integer searchType;
     /**
+     * 值类型[0-单选，1-多选]
+     */
+    private Integer valueType;
+    /**
      * 属性图标
      */
     private String icon;
@@ -43,6 +47,9 @@ public class AttrVo {
      */
     private Integer showDesc;
 
+    /**
+     * 分组id
+     */
     private Long attrGroupId;
 
 }

@@ -2,8 +2,8 @@ package org.lemur.lemurmall.product.controller;
 
 import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.R;
-import org.lemur.lemurmall.product.entity.AttrEntity;
 import org.lemur.lemurmall.product.service.AttrService;
+import org.lemur.lemurmall.product.vo.AttrRespVo;
 import org.lemur.lemurmall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +29,9 @@ public class AttrController {
     /**
      * 列表
      */
-    @GetMapping("base/list/{catelogId}")
-    public R baseAttrList(@RequestParam Map<String, Object> params,@PathVariable("catelogId") Long catelogId) {
-        PageUtils page = attrService.queryBaseAttrPage(params, catelogId);
+    @GetMapping("{attrType}/list/{catelogId}")
+    public R baseAttrList(@RequestParam Map<String, Object> params, @PathVariable("catelogId") Long catelogId, @PathVariable("attrType")String type) {
+        PageUtils page = attrService.queryBaseAttrPage(params, catelogId,type);
 
         return R.ok().put("page", page);
     }
@@ -53,10 +53,12 @@ public class AttrController {
      */
     @RequestMapping("/info/{attrId}")
     //@RequiresPermissions("product:attr:info")
-    public R info(@PathVariable("attrId") Long attrId){
-		AttrEntity attr = attrService.getById(attrId);
+    public R info(@PathVariable("attrId") Long attrId) {
+//		AttrEntity attr = attrService.getById(attrId);
 
-        return R.ok().put("attr", attr);
+        AttrRespVo attrInfo = attrService.getAttrInfo(attrId);
+
+        return R.ok().put("attr", attrInfo);
     }
 
     /**
@@ -75,8 +77,8 @@ public class AttrController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:attr:update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
+    public R update(@RequestBody AttrVo attr) {
+        attrService.updateAttr(attr);
 
         return R.ok();
     }
