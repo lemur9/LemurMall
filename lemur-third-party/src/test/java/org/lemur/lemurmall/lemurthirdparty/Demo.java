@@ -1,4 +1,4 @@
-package org.lemur.lemurmall.product;
+package org.lemur.lemurmall.lemurthirdparty;
 
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;

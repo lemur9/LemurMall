@@ -194,13 +194,23 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         Long catelogId = attrGroupEntity.getCatelogId();
         //2.当前分组只能关联别的分组没有引用的属性
         //2.1当前分类下的其他分组
-        List<AttrGroupEntity> group = attrGroupDao.selectList(new LambdaQueryWrapper<AttrGroupEntity>().eq(AttrGroupEntity::getCatelogId, catelogId).ne(AttrGroupEntity::getAttrGroupId, attrgroupId));
+        List<AttrGroupEntity> group = attrGroupDao.selectList(new LambdaQueryWrapper<AttrGroupEntity>().eq(AttrGroupEntity::getCatelogId, catelogId));
         List<Long> collect = group.stream().map(AttrGroupEntity::getAttrGroupId).collect(Collectors.toList());
         //2.2这些分组关联的属性
-        attrAttrgroupRelationDao.selectList(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().in(AttrAttrgroupRelationEntity::getAttrGroupId, collect));
-        //2.3从当前分类的所有属性中移除这些属性；
+        List<AttrAttrgroupRelationEntity> groupId = attrAttrgroupRelationDao.selectList(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().in(ObjectUtils.isNotEmpty(collect), AttrAttrgroupRelationEntity::getAttrGroupId, collect));
+        List<Long> attrIds = groupId.stream().map(AttrAttrgroupRelationEntity::getAttrId).collect(Collectors.toList());
 
-        return null;
+        //2.3从当前分类的所有属性中移除这些属性
+        LambdaQueryWrapper<AttrEntity> queryWrapper = new LambdaQueryWrapper<AttrEntity>().eq(AttrEntity::getCatelogId, catelogId).eq(AttrEntity::getAttrType, ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()).notIn(ObjectUtils.isNotEmpty(attrIds), AttrEntity::getAttrId, attrIds);
+        String key = (String) params.get("key");
+        if (ObjectUtils.isNotEmpty(key)) {
+            queryWrapper.and(w -> {
+                w.eq(AttrEntity::getAttrId, key).or().like(AttrEntity::getAttrName, key);
+            });
+        }
+        IPage<AttrEntity> page = this.page(new Query<AttrEntity>().getPage(params), queryWrapper);
+
+        return new PageUtils(page);
     }
 
 }

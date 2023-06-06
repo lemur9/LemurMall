@@ -1,11 +1,13 @@
 package org.lemur.lemurmall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.Query;
+import org.lemur.common.utils.R;
 import org.lemur.lemurmall.product.dao.BrandDao;
 import org.lemur.lemurmall.product.dao.CategoryBrandRelationDao;
 import org.lemur.lemurmall.product.dao.CategoryDao;
@@ -13,8 +15,8 @@ import org.lemur.lemurmall.product.entity.BrandEntity;
 import org.lemur.lemurmall.product.entity.CategoryBrandRelationEntity;
 import org.lemur.lemurmall.product.entity.CategoryEntity;
 import org.lemur.lemurmall.product.service.CategoryBrandRelationService;
-import org.lemur.lemurmall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -40,9 +42,19 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     }
 
     @Override
-    public void saveDetail(CategoryBrandRelationEntity categoryBrandRelation) {
+    public R saveDetail(CategoryBrandRelationEntity categoryBrandRelation) {
         Long brandId = categoryBrandRelation.getBrandId();
         Long catelogId = categoryBrandRelation.getCatelogId();
+
+        //判断关联关系是否已经存在
+        LambdaQueryWrapper<CategoryBrandRelationEntity> query = new LambdaQueryWrapper<>();
+        query.eq(CategoryBrandRelationEntity::getBrandId, brandId)
+                .eq(CategoryBrandRelationEntity::getCatelogId, catelogId);
+
+        if (this.count(query) != 0) {
+            throw new DuplicateKeyException("数据库中已存在该记录");
+        }
+
         //查询详细名字
         BrandEntity brandEntity = brandDao.selectById(brandId);
         CategoryEntity categoryEntity = categoryDao.selectById(catelogId);
@@ -50,6 +62,7 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         categoryBrandRelation.setCatelogName(categoryEntity.getName());
 
         this.save(categoryBrandRelation);
+        return R.ok();
     }
 
     @Override
@@ -57,12 +70,12 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         CategoryBrandRelationEntity categoryBrandRelationEntity = new CategoryBrandRelationEntity();
         categoryBrandRelationEntity.setBrandId(brandId);
         categoryBrandRelationEntity.setBrandName(name);
-        this.update(categoryBrandRelationEntity,new UpdateWrapper<CategoryBrandRelationEntity>().eq("brand_id",brandId));
+        this.update(categoryBrandRelationEntity, new UpdateWrapper<CategoryBrandRelationEntity>().eq("brand_id", brandId));
     }
 
     @Override
     public void updateCategory(Long catId, String name) {
-        baseMapper.updateCategory(catId,name);
+        baseMapper.updateCategory(catId, name);
     }
 
 }
