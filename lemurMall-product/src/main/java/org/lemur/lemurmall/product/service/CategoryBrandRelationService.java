@@ -3,8 +3,10 @@ package org.lemur.lemurmall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.R;
+import org.lemur.lemurmall.product.entity.BrandEntity;
 import org.lemur.lemurmall.product.entity.CategoryBrandRelationEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,5 +25,7 @@ public interface CategoryBrandRelationService extends IService<CategoryBrandRela
     void updateBrand(Long brandId, String name);
 
     void updateCategory(Long catId, String name);
+
+    List<BrandEntity> getBrandsByCatId(Long catId);
 }
 

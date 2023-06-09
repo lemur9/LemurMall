@@ -1,5 +1,6 @@
 package org.lemur.lemurmall.coupon.controller;
 
+import org.lemur.common.to.SkuReductionTo;
 import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.R;
 import org.lemur.lemurmall.coupon.entity.SkuFullReductionEntity;
@@ -23,6 +24,19 @@ import java.util.Map;
 public class SkuFullReductionController {
     @Autowired
     private SkuFullReductionService skuFullReductionService;
+
+
+    /**
+     * 列表
+     */
+    @PostMapping("/saveInfo")
+    //@RequiresPermissions("coupon:skufullreduction:list")
+    public R saveInfo(@RequestBody SkuReductionTo skuReductionTo){
+        skuFullReductionService.saveSkuReduction(skuReductionTo);
+
+        return R.ok();
+    }
+
 
     /**
      * 列表

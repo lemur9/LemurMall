@@ -3,6 +3,7 @@ package org.lemur.lemurmall.product.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.R;
+import org.lemur.lemurmall.product.entity.BrandEntity;
 import org.lemur.lemurmall.product.entity.CategoryBrandRelationEntity;
 import org.lemur.lemurmall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,12 @@ public class CategoryBrandRelationController {
         List<CategoryBrandRelationEntity> data = categoryBrandRelationService.list(new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_Id",brandId));
 
         return R.ok().put("data", data);
+    }
+
+    @GetMapping("/brands/list")
+    public R brandsList(@RequestParam(value = "catId", required = true) Long catId) {
+        List<BrandEntity> list = categoryBrandRelationService.getBrandsByCatId(catId);
+        return R.ok().put("data", list);
     }
 
     /**

@@ -5,6 +5,7 @@ import org.lemur.common.utils.PageUtils;
 import org.lemur.lemurmall.product.entity.AttrAttrgroupRelationEntity;
 import org.lemur.lemurmall.product.vo.AttrGroupRelationVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,7 @@ public interface AttrAttrgroupRelationService extends IService<AttrAttrgroupRela
     PageUtils queryPage(Map<String, Object> params);
 
     void deleteRelation(AttrGroupRelationVo[] vos);
+
+    void saveBatch(List<AttrGroupRelationVo> vos);
 }
 

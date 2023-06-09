@@ -3,6 +3,7 @@ package org.lemur.lemurmall.product;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -53,6 +54,7 @@ import org.springframework.context.annotation.ComponentScan;
  * 2)、使用@ExceptionHandler标注方法可以处理的异常。
  *
  */
+@EnableFeignClients(basePackages = "org.lemur.lemurmall.product.feign")
 @EnableDiscoveryClient
 @SpringBootApplication
 @ComponentScan("org.lemur")

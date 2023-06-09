@@ -1,6 +1,7 @@
 package org.lemur.lemurmall.coupon.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.lemur.common.to.SkuReductionTo;
 import org.lemur.common.utils.PageUtils;
 import org.lemur.lemurmall.coupon.entity.SkuFullReductionEntity;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface SkuFullReductionService extends IService<SkuFullReductionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveSkuReduction(SkuReductionTo skuReductionTo);
 }
 

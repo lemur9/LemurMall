@@ -9,6 +9,7 @@ import org.lemur.lemurmall.product.service.AttrGroupService;
 import org.lemur.lemurmall.product.service.AttrService;
 import org.lemur.lemurmall.product.service.CategoryService;
 import org.lemur.lemurmall.product.vo.AttrGroupRelationVo;
+import org.lemur.lemurmall.product.vo.AttrGroupWithAttrsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,25 @@ public class AttrGroupController {
 
     @Autowired
     private AttrAttrgroupRelationService attrAttrgroupRelationService;
+
+    /**
+     * 添加属性关联
+     */
+    @PostMapping("/attr/relation")
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos) {
+
+        attrAttrgroupRelationService.saveBatch(vos);
+
+        return R.ok();
+    }
+
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") Long categoryId) {
+        //1、查出当前分类下的所有属性分组，
+        //2、查出每个属性分组的所有属性
+        List<AttrGroupWithAttrsVo> vos = attrGroupService.getAttrGroupWithAttrsByCatelogId(categoryId);
+        return R.ok().put("data",vos);
+    }
 
     /**
      * 查看关联属性
