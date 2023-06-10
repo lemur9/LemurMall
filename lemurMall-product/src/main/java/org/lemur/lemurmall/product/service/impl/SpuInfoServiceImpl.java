@@ -1,5 +1,6 @@
 package org.lemur.lemurmall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -10,6 +11,7 @@ import org.lemur.common.to.SpuBoundTo;
 import org.lemur.common.utils.PageUtils;
 import org.lemur.common.utils.Query;
 import org.lemur.common.utils.R;
+import org.lemur.lemurmall.product.dao.CategoryBrandRelationDao;
 import org.lemur.lemurmall.product.dao.SpuInfoDao;
 import org.lemur.lemurmall.product.entity.*;
 import org.lemur.lemurmall.product.feign.CouponFeignService;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +56,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     CouponFeignService couponFeignService;
+
+    @Autowired
+    CategoryBrandRelationDao categoryBrandRelationDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -179,13 +185,44 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     }
 
     @Override
-    public PageUtils queryPageByConfition(Map<String, Object> params) {
+    public PageUtils queryPageByCondition(Map<String, Object> params) {
+        LambdaQueryWrapper<SpuInfoEntity> wrapper = new LambdaQueryWrapper<>();
+
+        String key = (String) params.get("key");
+        wrapper.and(ObjectUtils.isNotEmpty(key), w -> {
+            w.eq(SpuInfoEntity::getId, key).or().like(SpuInfoEntity::getSpuName, key);
+        });
+
+
+        String status = (String) params.get("status");
+        wrapper.eq(ObjectUtils.isNotEmpty(status), SpuInfoEntity::getPublishStatus, status);
+
+
+        String brandId = (String) params.get("brandId");
+        wrapper.eq(ObjectUtils.isNotEmpty(brandId) && !"0".equalsIgnoreCase(brandId), SpuInfoEntity::getBrandId, brandId);
+
+        String catelogId = (String) params.get("catelogId");
+        wrapper.eq(ObjectUtils.isNotEmpty(catelogId) && !"0".equalsIgnoreCase(catelogId), SpuInfoEntity::getCatalogId, catelogId);
+
         IPage<SpuInfoEntity> page = this.page(
-                new Query<SpuInfoEntity>().getPage(params),
-                new QueryWrapper<SpuInfoEntity>()
+                new Query<SpuInfoEntity>().getPage(params), wrapper
         );
 
-        return new PageUtils(page);
+        List<SpuInfoEntity> records = page.getRecords();
+
+        List<SpuInfoEntityVo> list = new ArrayList<>();
+        for (SpuInfoEntity record : records) {
+            LambdaQueryWrapper<CategoryBrandRelationEntity> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(CategoryBrandRelationEntity::getBrandId, record.getBrandId()).eq(CategoryBrandRelationEntity::getCatelogId, record.getCatalogId());
+            CategoryBrandRelationEntity categoryBrandRelationEntity = categoryBrandRelationDao.selectOne(queryWrapper);
+            SpuInfoEntityVo spuInfoEntityVo = new SpuInfoEntityVo();
+            BeanUtils.copyProperties(record, spuInfoEntityVo);
+            spuInfoEntityVo.setBrandName(categoryBrandRelationEntity.getBrandName());
+            spuInfoEntityVo.setCatalogName(categoryBrandRelationEntity.getCatelogName());
+            list.add(spuInfoEntityVo);
+        }
+
+        return new PageUtils(list, (int) page.getTotal(), (int) page.getSize(), (int) page.getCurrent());
     }
 
     private void saveSpuInfoDesc(SpuInfoDescEntity spuInfoDescEntity) {

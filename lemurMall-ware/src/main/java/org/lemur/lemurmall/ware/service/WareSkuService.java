@@ -2,8 +2,10 @@ package org.lemur.lemurmall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.lemur.common.utils.PageUtils;
+import org.lemur.lemurmall.ware.entity.PurchaseDetailEntity;
 import org.lemur.lemurmall.ware.entity.WareSkuEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface WareSkuService extends IService<WareSkuEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void addStock(List<PurchaseDetailEntity> purchaseDetailEntities);
 }
 
